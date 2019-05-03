@@ -15,6 +15,8 @@ class CreateSoalsTable extends Migration
     {
         Schema::create('soals', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('paket_id');
+            $table->foreign('paket_id')->references('id')->on('pakets');
             $table->longText('soal');
             $table->longText('pilihan'); // Array
             $table->string('jawaban');
