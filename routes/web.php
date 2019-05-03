@@ -11,6 +11,27 @@
 |
 */
 
+
+use Illuminate\Support\Facades\Route;
+
 Route::get('/', function () {
     return view('welcome');
+})->name('home');
+
+Route::prefix('/room')->group(function () {
+    Route::get('/create', 'RoomController@create')->name('room.create');
+    Route::post('/create', 'RoomController@store')->name('room.store');
+    Route::prefix('/{id_room}')->group(function () {
+        Route::get('/', 'RoomController@index')->name('room');
+        Route::get('/soal', 'RoomController@soal')->name('soal');
+        Route::post('/soal', 'RoomController@addSoal')->name('soal.add');
+        Route::get('/scoreboard', 'RoomController@scoreboard')->name('room.scoreboard');
+        Route::post('/submit', 'RoomController@submit')->name('room.submit');
+        Route::post('/start', 'RooomController@start')->name('room.start');
+    });
+});
+
+Route::prefix('/user')->group(function() {
+    Route::get('/create', 'UserController@create')->name('user');
+    Route::post('/create', 'UserController@store')->name('user.create');
 });
