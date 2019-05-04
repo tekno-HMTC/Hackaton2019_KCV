@@ -1,6 +1,5 @@
 @extends('master')
 @section('css')
-{{dd(session('abcd'))}}
     <style>
         html, body {
             background-color: #fff;
@@ -199,7 +198,7 @@
             <ul class="ks-cboxtags main-cbox">
                 @foreach($pakets as $paket)
                     <li>
-                        <input type="checkbox" name="paket_id[]" id="checkbox.{{$paket->id}}" value="{{$paket->id}}">
+                        <input type="checkbox" name="paket_id[]" id="checkbox.{{$paket->id}}" value="{{$paket->id}}" onclick="get_checked();">
                         <label for="checkbox.{{$paket->id}}">{{$paket->nama_paket}}</label>
                     </li>
                 @endforeach
@@ -224,35 +223,35 @@
             <div class="recommendation-box-2">
                 <ul class="ks-cboxtags">
                     <li>
-                        <input type="checkbox" id="rekom1" onclick="pilih_juga(1);">
+                        <input type="checkbox" id="rekom1" value="1" onclick="pilih_juga();">
                         <label for="rekom1">Rekom 1</label>
                     </li>
                     <li>
-                        <input type="checkbox" id="rekom2" onclick="pilih_juga(2);">
+                        <input type="checkbox" id="rekom2" value="1" onclick="pilih_juga();">
                         <label for="rekom2">Rekom 1</label>
                     </li>
                     <li>
-                        <input type="checkbox" id="rekom3" onclick="pilih_juga(3);">
+                        <input type="checkbox" id="rekom3" value="1" onclick="pilih_juga();">
                         <label for="rekom3">Rekom 1</label>
                     </li>
                     <li>
-                        <input type="checkbox" id="rekom4" onclick="pilih_juga(4);">
+                        <input type="checkbox" id="rekom4" value="1" onclick="pilih_juga();">
                         <label for="rekom4">Rekom 1</label>
                     </li>
                     <li>
-                        <input type="checkbox" id="rekom5" onclick="pilih_juga(5);">
+                        <input type="checkbox" id="rekom5" value="1" onclick="pilih_juga();">
                         <label for="rekom5">Rekom 1</label>
                     </li>
                     <li>
-                        <input type="checkbox" id="rekom6" onclick="pilih_juga(6);">
+                        <input type="checkbox" id="rekom6" value="1" onclick="pilih_juga();">
                         <label for="rekom6">Rekom 1</label>
                     </li>
                     <li>
-                        <input type="checkbox" id="rekom7" onclick="pilih_juga(7);">
+                        <input type="checkbox" id="rekom7" value="1" onclick="pilih_juga();">
                         <label for="rekom7">Rekom 1</label>
                     </li>
                     <li>
-                        <input type="checkbox" id="rekom8" onclick="pilih_juga(8);">
+                        <input type="checkbox" id="rekom8" value="1" onclick="pilih_juga();">
                         <label for="rekom8">Rekom 1</label>
                     </li>
                 </ul>
@@ -263,14 +262,49 @@
 
 @section('js')
     <script>
-        function pilih_juga(val) {
+        function pilih_juga() {
+            event.preventDefault();
+            let val = event.path[0].value;
+            console.log(val);
+            console.log($("input[type=checkbox][value=" + val + "]").is(':checked'));
             if ($("input[type=checkbox][value=" + val + "]").is(':checked')) {
-                $("input[type=checkbox][value=" + val + "]").prop("checked",false);
-            }
-            else {
                 $("input[type=checkbox][value=" + val + "]").prop("checked",true);
             }
-            
+            else {
+                $("input[type=checkbox][value=" + val + "]").prop("checked", false);
+            }
+            get_checked();
+        }
+
+        function get_checked(){
+            checkedArr = document.querySelectorAll("input[type=checkbox]:checked");
+            paket_ids = [];
+            for (let index = 0; index < checkedArr.length; index++) {
+                paket_id = checkedArr[index].value;
+                paket_ids.push(paket_id);
+            }
+            console.log(paket_ids)
+            $.ajax({
+                url: 'http://localhost:8080/recommendation',
+                dataType: 'json',
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({'paket_id' : paket_ids}),
+                processData: false,
+                success: function (data, textStatus, jQxhr) {
+                    console.log(data)
+                    for (let index = 1; index <= data.length; index++) {
+                        // console.log(data[index-1])
+                        // console.log(data[index-1].id, data[index - 1].nama_paket)
+                        let id = 'rekom'+index
+                        $('#'+id).val(data[index-1].id)
+                        $("label[for='"+id+"']").text(data[index-1].nama_paket)
+                    }
+                },
+                error: function (jqXhr, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                }
+            });
         }
 
 
