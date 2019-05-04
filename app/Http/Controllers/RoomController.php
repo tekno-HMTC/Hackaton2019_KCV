@@ -133,8 +133,8 @@ class RoomController extends Controller
             $score = 100 * $percentage;
             $benar = 1;
         }
-        $skor = $this->checkIfScoreExisted($request->room_id, $request->user_id);
         $room = Room::all()->where('kode', $request->id_room)->first();
+        $skor = $this->checkIfScoreExisted($room->id, $request->user_id);
         if(!$skor){
             $skor = new Skor();
             $skor->user_id = $request->user_id;
