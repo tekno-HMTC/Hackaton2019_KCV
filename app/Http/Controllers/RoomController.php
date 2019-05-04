@@ -8,43 +8,57 @@ use App\User;
 use App\Skor;
 use App\Soal;
 use App\Jawaban;
+use App\Paket;
 
 class RoomController extends Controller
 {
     public  function  index($id_room){
-
+        
     }
 
     public function create(){
-
-    }
-
-    public function store(Request $request){
-
-        $user = new User();
-        $user->username = 'master';
-        $user->save();
-
-        $room = new Room();
-        $room->master_id = $user->id;
-        $room->status = 0;
-        $room->kode = $request->kode;
-        $room->player_id = implode('|', array());
-        $room->save();
-        $room->kode = $room->id.'_'.$room->kode;
-        $room->save();
-
-        return redirect()->route('soal')->with([
-            'id_room' => $room->kode
+        $pakets = Paket::all();
+        return view('room.create')->with([
+            'pakets' => $pakets
         ]);
     }
 
-    public function soal($id_room){
+    public function store(Request $request){
+        $user = new User();
+        $user->username = 'dummy';
+        $user->save();
+        $user->username = $user->id.'_'.'master';
+        $user->save();
 
+        $id_room = $user->id.'_'.$request->kode;
+        $room = new Room();
+        $room->paket_id = implode('|', array());
+        $room->master_id = $user->id;
+        $room->status = 0;
+        $room->kode = $id_room;
+        $room->player_id = serialize(array());
+        $room->save();
+        
+        return redirect()->route('soal', $room->kode)->with([
+            'id_room' => $room->kode
+        ]);
+        // return redirect('/room/create');
+    }
+
+    public function soal($id_room){
+        $pakets = Paket::all();
+        $room = Room::where('kode', $id_room)->first();
+        return view('room.soal')->with([
+            'id_room' => $id_room,
+            'pakets' => $pakets
+        ]);
     }
 
     public function addSoal(Request $request, $id_room){
-        $room = Room::all()->where('kode', $id_room);
+        if(!is_array($request->paket_id))
+            return back();
+
+        $room = Room::all()->where('kode', $id_room)->first();
         $room->paket_id = implode('|', $request->paket_id);
         $room->save();
 
