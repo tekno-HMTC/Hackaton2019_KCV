@@ -1,0 +1,7 @@
+Flask
+flask_sqlalchemy
+flask_marshmallow
+marshmallow-sqlalchemy
+scikit-learn
+phpserialize
+spacy
