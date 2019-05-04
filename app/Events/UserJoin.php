@@ -43,6 +43,7 @@ class UserJoin implements ShouldBroadcast
 
     public function broadcastWith()
     {
-        return ['count' => count($this->room->player_id)];
+        $current_player = unserialize($this->room->player_id);
+        return ['count' => count($current_player)];
     }
 }
