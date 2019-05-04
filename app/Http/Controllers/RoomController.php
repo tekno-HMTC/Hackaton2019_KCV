@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\RoomStart;
 use Illuminate\Http\Request;
 use App\Room;
 use App\User;
@@ -88,6 +89,7 @@ class RoomController extends Controller
         $room = Room::all()->where('kode', $id_room);
         $room->status = 1;
         //broadcast
+        broadcast(new RoomStart($room))->toOthers();
         $room->save();
     }
 

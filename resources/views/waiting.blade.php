@@ -210,5 +210,9 @@
             temp = temp.join('/')
             document.querySelector('.num-player').firstElementChild.src = temp;
         });
+        channel.bind('room.start', function (data) {
+            console.log(data);
+            location.reload(true);
+        });
     </script>
 @endsection
