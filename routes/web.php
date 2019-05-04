@@ -26,6 +26,10 @@ Route::get('/showroom', function () {
     return view('room.showroom');
 })->name('showroom');
 
+Route::get('/scoreboard', function () {
+    return view('scoreboard');
+})->name('scoreboard');
+
 Route::prefix('/room')->group(function () {
     Route::get('/create', 'RoomController@create')->name('room.create');
     Route::post('/create', 'RoomController@store')->name('room.store');

@@ -20,7 +20,7 @@
         .row.dot {
             width: 20%;
             margin: auto;
-            margin-top: 40vh;
+            margin-top: 10vh;
         }
 
         .pinkBg {
@@ -141,6 +141,9 @@
 @section('body')
     <div class="main">
         <div class="container text-center">
+            <div class="num-player">
+                <img src="{{URL::asset('/images/0.png')}}" />
+            </div>
             
             <div class="row dot">
 

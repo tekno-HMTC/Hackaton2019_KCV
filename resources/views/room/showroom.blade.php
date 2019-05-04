@@ -177,7 +177,7 @@
             
             $('#kotak-time-bar div').animate(
                 { width: progressBarWidth + 'px'}, 
-                timeleft == timetotal ? 0 : 1000, 'linear').html(timeleft);
+                timeleft == timetotal ? 0 : 1000, 'linear');
             if(timeleft > 0) {
                 
                 setTimeout(function() {
