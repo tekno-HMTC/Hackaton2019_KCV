@@ -142,7 +142,7 @@
     <div class="main">
         <div class="container text-center">
             <div class="num-player">
-                <img src="{{URL::asset('/images/0.png')}}" />
+                <img src="{{URL::asset('/images/'.$player_count.'.png')}}" />
             </div>
             
             <div class="row dot">
@@ -187,4 +187,32 @@
 @endsection
 
 @section('js')
+    <script src="https://js.pusher.com/4.4/pusher.min.js"></script>
+    <script>
+
+        // Enable pusher logging - don't include this in production
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('9abbb80c69bc249bdc14', {
+            cluster: 'ap1',
+            forceTLS: false
+        });
+
+        var channel = pusher.subscribe('rooms.{{ $id_room }}');
+        channel.bind('user.join', function(data) {
+            console.log(data.count);
+            let imgSrc = document.querySelector('.num-player').firstElementChild.src;
+            let temp = imgSrc.split('/');
+            let imgName = temp[temp.length - 1].split('.');
+            imgName[0] = String(data.count);
+            imgName = imgName.join('.');
+            temp[temp.length - 1] = imgName;
+            temp = temp.join('/')
+            document.querySelector('.num-player').firstElementChild.src = temp;
+        });
+        channel.bind('room.start', function (data) {
+            console.log(data);
+            location.reload(true);
+        });
+    </script>
 @endsection
