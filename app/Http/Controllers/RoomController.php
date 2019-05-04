@@ -13,7 +13,15 @@ use App\Paket;
 class RoomController extends Controller
 {
     public  function  index($id_room){
-        $room = Room::all()->where('kode', $id_room);
+        $room = Room::all()->where('kode', $id_room)->first();
+        if($room->status == 0){
+            # waiting room
+        }
+        else if($room->status == 1){
+            $kumpulan_soal = $this->getAllSoalForRoom($room);
+            dd($kumpulan_soal);
+            return view('room', compact('kumpulan_soal'));
+        }
     }
 
     public function create(){
@@ -137,8 +145,7 @@ class RoomController extends Controller
         return $randomString;
     }
 
-    private function getAllSoalForRoom($id_room){
-        $room = Room::all()->where('kode', $id_room);
+    private function getAllSoalForRoom($room){
         $paket_soal = $room->paket_id;
         $paket_soal = explode('|', $paket_soal);
         $kumpulan_soal = array();
@@ -154,6 +161,7 @@ class RoomController extends Controller
         foreach($soals as $soal){
             array_push($kumpulan_soal, $this->translateSoal($soal));
         }
+        return $kumpulan_soal;
     }
 
     private function translateSoal($soal){
