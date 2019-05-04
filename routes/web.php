@@ -18,6 +18,14 @@ Route::get('/', function () {
     return view('home');
 })->name('home');
 
+Route::get('/waiting', function () {
+    return view('waiting');
+})->name('waiting');
+
+Route::get('/showroom', function () {
+    return view('room.showroom');
+})->name('showroom');
+
 Route::prefix('/room')->group(function () {
     Route::get('/create', 'RoomController@create')->name('room.create');
     Route::post('/create', 'RoomController@store')->name('room.store');
