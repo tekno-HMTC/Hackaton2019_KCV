@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     public  function create(){
-
+        return view('user');
     }
 
     public function store(Request $request){
@@ -17,7 +17,7 @@ class UserController extends Controller
         $user->username = $request->username;
         $user->save();
 
-        $room = Room::all()->where('kode', $request->kode_room);
+        $room = Room::all()->where('kode', $request->kode_room)->first();
         $current_player = unserialize($room->player_id);
         array_push($current_player, $user->id);
         $room->player_id = serialize($current_player);
