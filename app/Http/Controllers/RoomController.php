@@ -15,11 +15,13 @@ class RoomController extends Controller
     public  function  index($id_room){
         $room = Room::all()->where('kode', $id_room)->first();
         if($room->status == 0){
-            # waiting room
+            return view('waiting');
         }
         else if($room->status == 1){
             $kumpulan_soal = $this->getAllSoalForRoom($room);
-            return view('room', compact('kumpulan_soal'));
+            return view('room.room', compact('kumpulan_soal'))->with([
+                'id_room' => $id_room
+            ]);
         }
     }
 
@@ -146,7 +148,7 @@ class RoomController extends Controller
     }
 
     private function checkIfScoreExisted($room_id, $user_id){
-        $score = Skor::all()->where('room_id', $room_id)->where('user_id', $user_id);
+        $score = Skor::all()->where('room_id', $room_id)->where('user_id', $user_id)->first();
         return ($score ? $score : false);
     }
 
@@ -187,7 +189,8 @@ class RoomController extends Controller
     private function translateSoal($soal){
         $translated = array(
             'soal' => $soal->soal,
-            'jawaban' => unserialize($soal->pilihan)
+            'jawaban' => unserialize($soal->pilihan),
+            'soal_id' => $soal->id
         );
         return $translated;
     }

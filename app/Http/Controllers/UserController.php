@@ -23,6 +23,7 @@ class UserController extends Controller
         $room->player_id = serialize($current_player);
         $room->save();
         //broadcast
+        $request->session()->put('user_id', $user->id);
         return redirect()->route('room', ['id_room' => $room->kode]);
     }
 
