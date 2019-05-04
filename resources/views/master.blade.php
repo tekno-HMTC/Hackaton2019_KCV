@@ -12,7 +12,8 @@
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Chewy|Roboto+Condensed" rel="stylesheet">
         
-
+        <meta name="csrf-token" content="{{ csrf_token() }}" />
+        
         <!-- Styles -->
         @yield('css')
     </head>
