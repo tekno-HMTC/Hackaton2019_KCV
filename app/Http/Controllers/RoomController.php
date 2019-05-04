@@ -19,7 +19,6 @@ class RoomController extends Controller
         }
         else if($room->status == 1){
             $kumpulan_soal = $this->getAllSoalForRoom($room);
-            dd($kumpulan_soal);
             return view('room', compact('kumpulan_soal'));
         }
     }
@@ -50,7 +49,6 @@ class RoomController extends Controller
         return redirect()->route('soal', $room->kode)->with([
             'id_room' => $room->kode
         ]);
-        // return redirect('/room/create');
     }
 
     public function soal($id_room){
@@ -89,11 +87,27 @@ class RoomController extends Controller
     }
 
     public function scoreboard($id_room){
-        $skors = Skor::all()->where('room_id', $id_room);
-        $current_skor = array_map(function($skor) {return array(User::find($skor->user_id)->username => (int)$skor->skor);}, $skors);
-        arsort($current_skor);
+        $room = Room::all()->where('kode', $id_room)->first();
+        $room_id = $room->id;
+        $skors = Skor::where('room_id', $room_id)->orderBy('skor_user', 'desc')->get();
+        $current_skor = array();
+        foreach($skors as $skor){
+            array_push($current_skor, array(User::find($skor->user_id)->username => (int)$skor->skor_user));
+        }
         $data = $current_skor;
         return view('scoreboard', compact('data'));
+    }
+
+    public function scoreboard_data($id_room){
+        $room = Room::all()->where('kode', $id_room)->first();
+        $room_id = $room->id;
+        $skors = Skor::where('room_id', $room_id)->orderBy('skor_user', 'desc')->get();
+        $current_skor = array();
+        foreach($skors as $skor){
+            array_push($current_skor, array(User::find($skor->user_id)->username => (int)$skor->skor_user));
+        }
+        $data = $current_skor;
+        return compact('data');
     }
 
     public function submit(Request $request){
@@ -102,27 +116,33 @@ class RoomController extends Controller
         $jawaban->user_id = $request->user_id;
         $jawaban->jawaban = $request->jawaban;
         $jawaban->save();
-        $this->updateScoreBoard($request);
+        $benar = $this->updateScoreBoard($request);
         //broadcast
+        return redirect()->route('room.scoreboard', ['id_room' => $request->id_room])->with([
+            'benar' => $benar
+        ]);
     }
 
     private function updateScoreBoard($request){
         $soal = Soal::all()->find($request->soal_id);
         $score = 0;
+        $benar = 0;
         if($request->jawaban == $soal->jawaban){
-            $remaining_time = 300 - $request->elapsed_time;
-            $percentage = $remaining_time/300;
+            $remaining_time = 15 - $request->elapsed_time;
+            $percentage = $remaining_time/15;
             $score = 100 * $percentage;
+            $benar = 1;
         }
         $skor = $this->checkIfScoreExisted($request->room_id, $request->user_id);
+        $room = Room::all()->where('kode', $request->id_room)->first();
         if(!$skor){
             $skor = new Skor();
             $skor->user_id = $request->user_id;
-            $skor->room_id = $request->room_id;
+            $skor->room_id = $room->id;
             $skor->skor_user = 0;
         }
         $skor->skor_user = $skor->skor_user + $score;
-
+        return $benar;
     }
 
     private function checkIfScoreExisted($room_id, $user_id){

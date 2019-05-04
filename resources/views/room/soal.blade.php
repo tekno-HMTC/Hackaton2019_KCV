@@ -1,5 +1,6 @@
 @extends('master')
 @section('css')
+{{dd(session('abcd'))}}
     <style>
         html, body {
             background-color: #fff;
