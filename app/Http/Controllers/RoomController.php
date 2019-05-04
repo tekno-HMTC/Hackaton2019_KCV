@@ -13,7 +13,7 @@ use App\Paket;
 class RoomController extends Controller
 {
     public  function  index($id_room){
-        
+        $room = Room::all()->where('kode', $id_room);
     }
 
     public function create(){
@@ -66,6 +66,11 @@ class RoomController extends Controller
             'id_room' => $room->kode,
             'master' => 1
         ]);
+    }
+
+    public function soalFromPaketSoal(Request $request){
+        $soals = Soal::all()->where('paket_id', $request->paket_id);
+
     }
 
     public function start(Request $request, $id_room){
@@ -130,5 +135,32 @@ class RoomController extends Controller
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
         return $randomString;
+    }
+
+    private function getAllSoalForRoom($id_room){
+        $room = Room::all()->where('kode', $id_room);
+        $paket_soal = $room->paket_id;
+        $paket_soal = explode('|', $paket_soal);
+        $kumpulan_soal = array();
+        foreach($paket_soal as $paket){
+            $kumpulan_soal = array_merge($kumpulan_soal, $this->getSoalFromPaket($paket));
+        }
+        return $kumpulan_soal;
+    }
+
+    private function getSoalFromPaket($id_paket){
+        $soals = Soal::all()->where('paket_id', $id_paket);
+        $kumpulan_soal = array();
+        foreach($soals as $soal){
+            array_push($kumpulan_soal, $this->translateSoal($soal));
+        }
+    }
+
+    private function translateSoal($soal){
+        $translated = array(
+            'soal' => $soal->soal,
+            'jawaban' => unserialize($soal->pilihan)
+        );
+        return $translated;
     }
 }
