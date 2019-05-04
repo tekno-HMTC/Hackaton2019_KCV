@@ -15,7 +15,10 @@ class RoomController extends Controller
     public  function  index($id_room){
         $room = Room::all()->where('kode', $id_room)->first();
         if($room->status == 0){
-            return view('waiting');
+            $current_players = $room->player_id;
+            $current_players = unserialize($current_players);
+            $player_count = count($current_players);
+            return view('waiting')->with('id_room', $room->id)->with('player_count', $player_count);
         }
         else if($room->status == 1){
             $kumpulan_soal = $this->getAllSoalForRoom($room);

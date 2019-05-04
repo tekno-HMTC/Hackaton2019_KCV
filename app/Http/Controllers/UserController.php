@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserJoin;
 use App\User;
 use App\Room;
 use Illuminate\Http\Request;
@@ -23,6 +24,7 @@ class UserController extends Controller
         $room->player_id = serialize($current_player);
         $room->save();
         //broadcast
+        broadcast(new UserJoin($room))->toOthers();
         $request->session()->put('user_id', $user->id);
         return redirect()->route('room', ['id_room' => $room->kode]);
     }
