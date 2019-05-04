@@ -21,8 +21,9 @@ class UserController extends Controller
         $current_player = unserialize($room->player_id);
         array_push($current_player, $user->id);
         $room->player_id = serialize($current_player);
+        $room->save();
         //broadcast
-        return redirect()->route('room', ['id_room' => $room->id]);
+        return redirect()->route('room', ['id_room' => $room->kode]);
     }
 
     
