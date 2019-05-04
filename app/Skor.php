@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Skor extends Model
 {
-    protected $fillable = ['users_id', 'rooms_id', 'skor_user'];
+    protected $fillable = ['user_id', 'room_id', 'skor_user'];
 }
