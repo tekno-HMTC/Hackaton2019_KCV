@@ -120,9 +120,7 @@ class RoomController extends Controller
         $jawaban->save();
         $benar = $this->updateScoreBoard($request);
         //broadcast
-        return redirect()->route('room.scoreboard', ['id_room' => $request->id_room])->with([
-            'benar' => $benar
-        ]);
+        return $benar;
     }
 
     private function updateScoreBoard($request){
