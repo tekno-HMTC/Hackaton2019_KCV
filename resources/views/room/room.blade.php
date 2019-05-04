@@ -132,7 +132,7 @@
                 <?php $number = count($kumpulan_soal); ?>
 
                 @foreach ($kumpulan_soal as $soal)
-                    <form method="POST" id="form_.{{$soal['soal_id']}}" action="{{ route('room.submit', ['id_room'=>$id_room])}}">
+                    <form method="POST" id="form_{{$soal['soal_id']}}" action="{{ route('room.submit', ['id_room'=>$id_room])}}">
                     @csrf
 
                     <input type="hidden" name="soal_id" value={{$soal['soal_id']}}>
@@ -141,7 +141,7 @@
                     <input type="hidden" name="id_room" value={{$id_room}}>
                     <input type="hidden" name="jawaban" value="0">
                     
-                    <div class="kotak-soal-3 d-none" id="soal_.{{$soal['soal_id']}}">
+                    <div class="kotak-soal-3 d-none" id="soal_{{$soal['soal_id']}}">
                         <div class="soal">
                             <p><b>{{$soal['soal']}}</b></p>
                         </div>
@@ -205,6 +205,8 @@
                 var user_id =  $("#form_"+val+" input[name=user_id]").val();
                 var elapsed_time =  $("#form_"+val+" input[name=elapsed_time]").val();
                 var id_room =  $("#form_"+val+" input[name=id_room]").val();
+
+                console.log('/room/'+id_room+'/submit')
         
                 $.ajax({
                     type:'POST',
@@ -212,7 +214,7 @@
                     data:{soal_id:soal_id, user_id:user_id, elapsed_time:elapsed_time,
                         id_room: id_room, jawaban:jawaban},
                     success:function(data){
-                        alert(data.success);
+                        console.log("berhasil");
                     }
 
                 });
@@ -242,6 +244,10 @@
                     $(".kotak-soal-3").addClass("d-none");
                     temp = document.getElementsByClassName('kotak-soal-3')[numb - number]
                     $(temp).removeClass("d-none");
+                }
+                else{
+                    var id_rom =  $("#form_"+val+" input[name=id_room]").val();
+                    window.location.href = "room/" + id_rom +"/scoreboard";
                 }
             }
         };
