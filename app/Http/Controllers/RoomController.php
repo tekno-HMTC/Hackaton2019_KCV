@@ -99,10 +99,13 @@ class RoomController extends Controller
         $skors = Skor::where('room_id', $room_id)->orderBy('skor_user', 'desc')->get();
         $current_skor = array();
         foreach($skors as $skor){
-            array_push($current_skor, array(User::find($skor->user_id)->username => (int)$skor->skor_user));
+            array_push($current_skor, [
+                'nama' => User::find($skor->user_id)->username,
+                'skor' => (int)$skor->skor_user]);
         }
         $data = $current_skor;
-        return view('scoreboard', compact('data'));
+//        dd($data);
+        return view('scoreboard', compact('data'))->with('id_room', $room_id);
     }
 
     public function scoreboard_data($id_room){
@@ -111,7 +114,9 @@ class RoomController extends Controller
         $skors = Skor::where('room_id', $room_id)->orderBy('skor_user', 'desc')->get();
         $current_skor = array();
         foreach($skors as $skor){
-            array_push($current_skor, array(User::find($skor->user_id)->username => (int)$skor->skor_user));
+            array_push($current_skor, [
+                'nama' => User::find($skor->user_id)->username,
+                'skor' => (int)$skor->skor_user]);
         }
         $data = $current_skor;
         return compact('data');

@@ -39,26 +39,12 @@
             <div class="scoreboard shadow p-3 mb-5">
                 <table class="table table-sm table-borderless text-center">
                     <tbody>
+                    @foreach($data as $dt)
                         <tr>
-                            <th scope="row"><h2>Titut</h2></th>
-                            <td><h2><span class="badge badge-secondary">200</span></h2></td>
+                            <th scope="row" ><h2>{{ $dt['nama'] }}</h2></th>
+                            <td><h2><span class="badge badge-secondary">{{ $dt['skor'] }}</span></h2></td>
                         </tr>
-                        <tr>
-                            <th scope="row"><h2>Dandy</h2></th>
-                            <td><h2><span class="badge badge-secondary">100</span></h2></td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><h2>Yoshi</h2></th>
-                            <td><h2><span class="badge badge-secondary">90</span></h2></td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><h2>Randi</h2></th>
-                            <td><h2><span class="badge badge-secondary">80</span></h2></td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><h2>Syauqi</h2></th>
-                            <td><h2><span class="badge badge-secondary">70</span></h2></td>
-                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
             </div>
@@ -70,6 +56,41 @@
 @endsection
 
 @section('js')
+    <script src="https://js.pusher.com/4.4/pusher.min.js"></script>
+    <script>
+        console.log('{{ url()->current() }}')
+        // Enable pusher logging - don't include this in production
+        Pusher.logToConsole = true;
 
+        var pusher = new Pusher('9abbb80c69bc249bdc14', {
+            cluster: 'ap1',
+            forceTLS: false
+        });
+
+        var channel = pusher.subscribe('rooms.{{ $id_room }}');
+        channel.bind('scoreboard.update', function(data) {
+            location.reload(true);
+            {{--$.ajax({--}}
+                {{--type:'GET',--}}
+                {{--url: '{{ url()->current() }}'+'/data',--}}
+                {{--success:function(data){--}}
+                    {{--console.log(data);--}}
+                    {{--// $("#score_"+data.data[0].nama).html(data.data[0].skor);--}}
+                    {{--// $('tbody').text('')--}}
+                    {{--let baru = ''--}}
+                    {{--for (let i = 0; i < data.data.length; i++){--}}
+                        {{--let temp = ''--}}
+                        {{--temp += '<tr><th scope="row" ><h2>';--}}
+                        {{--temp += data.data[i].nama;--}}
+                        {{--temp += '</h2></th><td><h2><span class="badge badge-secondary">'--}}
+                        {{--temp += data.data[i].skor;--}}
+                        {{--temp += '</span></h2></td></tr>';--}}
+                        {{--baru += temp;--}}
+                    {{--}--}}
+                    {{--$('tbody').text(baru);--}}
+                {{--}--}}
+            {{--});--}}
+        });
+    </script>
 @endsection
 

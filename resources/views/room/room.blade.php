@@ -215,6 +215,7 @@
                         id_room: id_room, jawaban:jawaban},
                     success:function(data){
                         console.log("berhasil");
+                        console.log(data);
                     }
 
                 });
@@ -238,7 +239,7 @@
             } else {
                 number--;
                 if(number > 0){
-                    progress(5, 5, $('#kotak-time-bar'));
+                    progress(15, 15, $('#kotak-time-bar'));
                     
                     flag = 0;
                     $(".kotak-soal-3").addClass("d-none");
@@ -255,7 +256,7 @@
         temp = document.getElementsByClassName('kotak-soal-3')[0]
         $(temp).removeClass("d-none");
 
-        progress(5, 5, $('#kotak-time-bar'));
+        progress(15, 15, $('#kotak-time-bar'));
 
     </script>
 
