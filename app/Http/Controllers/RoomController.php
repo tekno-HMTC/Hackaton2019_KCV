@@ -10,6 +10,7 @@ use App\Skor;
 use App\Soal;
 use App\Jawaban;
 use App\Paket;
+use function Opis\Closure\unserialize;
 
 class RoomController extends Controller
 {
@@ -135,9 +136,11 @@ class RoomController extends Controller
 
     private function updateScoreBoard($request){
         $soal = Soal::all()->find($request->soal_id);
+        $jawaban = unserialize($soal->pilihan);
+        $jawaban_benar = $jawaban[$soal->jawaban];
         $score = 0;
         $benar = 0;
-        if($request->jawaban == $soal->jawaban){
+        if($request->jawaban == $jawaban_benar){
             $remaining_time = 15 - $request->elapsed_time;
             $percentage = $remaining_time/15;
             $score = 100 * $percentage;
