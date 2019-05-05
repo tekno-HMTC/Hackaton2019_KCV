@@ -246,8 +246,8 @@
                     $(temp).removeClass("d-none");
                 }
                 else{
-                    var id_rom =  $("#form_"+val+" input[name=id_room]").val();
-                    window.location.href = "room/" + id_rom +"/scoreboard";
+                    var id_rom = $("input[name=id_room]")[0].value;
+                    window.location.href = id_rom +"/scoreboard";
                 }
             }
         };

@@ -86,7 +86,7 @@ class RoomController extends Controller
     }
 
     public function start(Request $request, $id_room){
-        $room = Room::all()->where('kode', $id_room);
+        $room = Room::all()->where('kode', $id_room)->first();
         $room->status = 1;
         //broadcast
         broadcast(new RoomStart($room))->toOthers();

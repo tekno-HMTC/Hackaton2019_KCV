@@ -175,7 +175,7 @@
                 </div>    
 
             </div>
-
+            
             <div class="button-play" onclick="location.href='{{url('/play')}}';">
                 <button class="button">
                     <span>Play Now</span>
@@ -207,7 +207,7 @@
             imgName[0] = String(data.count);
             imgName = imgName.join('.');
             temp[temp.length - 1] = imgName;
-            temp = temp.join('/')
+            temp = temp.join('/');
             document.querySelector('.num-player').firstElementChild.src = temp;
         });
         channel.bind('room.start', function (data) {
